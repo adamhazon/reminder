@@ -5,14 +5,93 @@
     font-style: normal;
 }
 
-.App {
+.pageWrapper {
     padding-top: 3em;
 }
 
-.gas {
-    font-family: remindme-categories;
+.ui.header.uppercase {
+    text-transform: uppercase;
 }
 
-.gas:before {
-    content: "\e81b";
+.categoryHeader {
+    font-size: 12px !important;
+    text-align: center;
 }
+
+.categoryIcon {
+    font-family: remindme-categories;
+    font-size: 64px;
+    font-style: normal;
+}
+
+.categoryIcon:before {
+    color: #555555;
+}
+
+/* remindme-categories Icons */
+.category-icon--anti-virus-software:before { content: '\e800'; }
+.category-icon--auslandsversicherung:before { content: '\e801'; }
+.category-icon--automobile:before { content: '\e802'; }
+.category-icon--bahn:before { content: '\e803'; }
+.category-icon--bauherrenhaftpflicht:before { content: '\e804'; }
+.category-icon--bausparen:before { content: '\e805'; }
+.category-icon--bav:before { content: '\e806'; }
+.category-icon--bike:before { content: '\e807'; }
+.category-icon--bonuskarte:before { content: '\e808'; }
+.category-icon--bootsversicherung:before { content: '\e809'; }
+.category-icon--brillenversicherung:before { content: '\e80a'; }
+.category-icon--bus:before { content: '\e80b'; }
+.category-icon--buversicherung:before { content: '\e80c'; }
+.category-icon--car-sharing:before { content: '\e80d'; }
+.category-icon--connect:before { content: '\e80e'; }
+.category-icon--dashboard-eigene:before { content: '\e80f'; }
+.category-icon--datentarife:before { content: '\e810'; }
+.category-icon--dating:before { content: '\e811'; }
+.category-icon--dsl:before { content: '\e812'; }
+.category-icon--e-mail:before { content: '\e813'; }
+.category-icon--ebooks:before { content: '\e814'; }
+.category-icon--elektroversicherung:before { content: '\e815'; }
+.category-icon--festgeld:before { content: '\e816'; }
+.category-icon--festnetz:before { content: '\e817'; }
+.category-icon--fitness:before { content: '\e818'; }
+.category-icon--food:before { content: '\e819'; }
+.category-icon--games:before { content: '\e81a'; }
+.category-icon--gas:before { content: '\e81b'; }
+.category-icon--gebaeudeversicherung:before { content: '\e81c'; }
+.category-icon--gewerkschaft:before { content: '\e81d'; }
+.category-icon--giro:before { content: '\e81e'; }
+.category-icon--grundhaftpflicht:before { content: '\e81f'; }
+.category-icon--haftpflicht:before { content: '\e820'; }
+.category-icon--hausrat:before { content: '\e821'; }
+.category-icon--hilfsorga:before { content: '\e822'; }
+.category-icon--kabel:before { content: '\e823'; }
+.category-icon--kfzversicherung:before { content: '\e824'; }
+.category-icon--krankenversicherung:before { content: '\e825'; }
+.category-icon--krankenzusatz:before { content: '\e826'; }
+.category-icon--kredite:before { content: '\e827'; }
+.category-icon--kreditkarte:before { content: '\e828'; }
+.category-icon--lebensversicherung:before { content: '\e829'; }
+.category-icon--lotto:before { content: '\e82a'; }
+.category-icon--mobilfunk:before { content: '\e82b'; }
+.category-icon--motorradversicherung:before { content: '\e82c'; }
+.category-icon--musikstreaming:before { content: '\e82d'; }
+.category-icon--partei:before { content: '\e82e'; }
+.category-icon--paytv:before { content: '\e82f'; }
+.category-icon--pflegeversicherung:before { content: '\e830'; }
+.category-icon--rechtsschutzversicherung:before { content: '\e831'; }
+.category-icon--reiseversicherung:before { content: '\e832'; }
+.category-icon--riester:before { content: '\e833'; }
+.category-icon--ruerub:before { content: '\e834'; }
+.category-icon--sonnenstudio:before { content: '\e835'; }
+.category-icon--sparkonto:before { content: '\e836'; }
+.category-icon--sportverein:before { content: '\e837'; }
+.category-icon--sterbegeld:before { content: '\e838'; }
+.category-icon--strom:before { content: '\e839'; }
+.category-icon--tagesgeld:before { content: '\e83a'; }
+.category-icon--tierhalter:before { content: '\e83b'; }
+.category-icon--unfallversicherung:before { content: '\e83c'; }
+.category-icon--videostream:before { content: '\e83d'; }
+.category-icon--webhosting:before { content: '\e83e'; }
+.category-icon--webservices:before { content: '\e83f'; }
+.category-icon--zahnzusatz:before { content: '\e840'; }
+.category-icon--zeitschriften:before { content: '\e841'; } 
