@@ -13,6 +13,14 @@
     text-transform: uppercase;
 }
 
+.ui.ribbon.label.ribbonLabel {
+    left: -14px;
+}
+
+.categorySelectionWrapper {
+    margin-bottom: 1em;
+}
+
 .categoryHeader {
     font-size: 12px !important;
     text-align: center;

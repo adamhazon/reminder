@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { Container, Header, Icon, Form } from 'semantic-ui-react';
+import { Container, Header, Icon, Form, Label } from 'semantic-ui-react';
 
 import { RootState } from '../../redux';
 import { getCategoriesGrouped } from '../../redux/modules/category';
@@ -28,6 +28,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 interface ReminderForm {
   title: string;
   category?: Category;
+  provider: string;
 }
 
 interface State {
@@ -41,7 +42,8 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
   const [state, setState] = useState<State>({
     form: {
       title: '',
-      category: undefined
+      category: undefined,
+      provider: ''
     }
   });
 
@@ -49,19 +51,22 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
     if (categoriesGrouped.length === 0) {
       getCategoriesGrouped();
     }
-    if (providers.length === 0) {
-      getProviders('016f388e-bcf7-410b-9ebd-08ff91484ec6');
-    }
   }, [getCategoriesGrouped, getProviders, categoriesGrouped, providers]);
 
   const setCategory = (category: Category) => {
-    setState({
-      ...state,
-      form: {
-        ...state.form,
-        category
+    setState(prevState => {
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          category,
+          provider: prevState.form.category 
+                    && prevState.form.category.id === category.id 
+                    ? prevState.form.provider : ''
+        }
       }
     });
+    getProviders(category.id);
   }
 
   const handleTextInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,19 +87,20 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
     <div className='pageWrapper'>
       <Container text>
 
-        <Header as='h2' className='uppercase'>
+        <Header className='uppercase' icon textAlign='center'>
           <Icon name='bell outline' />
-          <Header.Content>Add a reminder</Header.Content>
+          Create a reminder
         </Header>
 
         <Form>
           <Form.Field>
-            <input 
-                type='text' 
-                name='title'
-                value={form.title}
-                placeholder='Title...' 
-                onChange={handleTextInputChange}
+            <Label ribbon color='purple' className='ribbonLabel'>Title</Label>
+            <Form.Input
+              type='text' 
+              name='title'
+              value={form.title}
+              placeholder='Describe your reminder...' 
+              onChange={handleTextInputChange}
             />
           </Form.Field>
           
@@ -103,6 +109,30 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
             setCategory={setCategory}
             selected={form.category}
           />
+
+          <Form.Field>
+            <Label ribbon color='orange' className='ribbonLabel'>Provider</Label>
+            <Form.Dropdown
+              fluid
+              search
+              selection
+              placeholder='Choose a provider...'
+              options={providers.map((provider) => {
+                return {
+                  text: provider.company.companyName,
+                  value: provider.company.companyName
+                };
+              })}
+              onChange={(e) => setState({
+                ...state,
+                form: {
+                  ...form,
+                  provider: e.currentTarget.innerText
+                }
+              })}
+              value={form.provider}
+            />
+          </Form.Field>
         </Form>
 
       </Container>

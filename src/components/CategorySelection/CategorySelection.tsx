@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { CategoryGroup, Category } from '../../redux/api';
-import { Form, Accordion, Card, Icon, AccordionTitleProps } from 'semantic-ui-react';
+import { Form, Input, Accordion, Card, Icon, AccordionTitleProps, Label } from 'semantic-ui-react';
 import CreateCategories from './CreateCategories';
 
 interface Props {
@@ -28,7 +28,6 @@ const CategorySelection: React.FC<Props> = ({ categoriesGrouped, setCategory, se
     }
 
     const toggleCategorySelection = () => {
-        console.log('HERE!!');
         setState(prevState => {
             return {
                 ...state,
@@ -83,20 +82,21 @@ const CategorySelection: React.FC<Props> = ({ categoriesGrouped, setCategory, se
     return (
         <Fragment>
             <Form.Field>
-                <input 
+                <Label ribbon color='olive' className='ribbonLabel'>Category</Label>
+                <Input 
                     type='text' 
                     name='category' 
-                    placeholder='Please choose a category...'
+                    placeholder='Select a category...'
                     onClick={() => {
                         toggleCategorySelection()
                     }}
                     readOnly={true}
-                    value={selected ? selected.categoryName : undefined}
+                    value={selected ? selected.categoryName : ''}
                 />
             </Form.Field>
 
             {state.showCategories &&
-                <Accordion fluid styled>
+                <Accordion fluid styled className='categorySelectionWrapper'>
                     {createGroups()}
                 </Accordion>
             }
