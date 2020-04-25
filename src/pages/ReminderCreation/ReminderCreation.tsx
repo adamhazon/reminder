@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { Container, Header, Icon, Form, Label } from 'semantic-ui-react';
+import { Container, Header, Icon, Form, Label, Button } from 'semantic-ui-react';
+import { useHistory } from 'react-router-dom';
 
 import { RootState } from '../../redux';
 import { getCategoriesGrouped } from '../../redux/modules/category';
@@ -39,6 +40,7 @@ type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;
 
 const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, getProviders, categoriesGrouped, providers }) => {
+  const history = useHistory();
   const [state, setState] = useState<State>({
     form: {
       title: '',
@@ -113,6 +115,7 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
           <Form.Field>
             <Label ribbon color='orange' className='ribbonLabel'>Provider</Label>
             <Form.Dropdown
+              disabled={!providers.length}
               fluid
               search
               selection
@@ -133,6 +136,17 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
               value={form.provider}
             />
           </Form.Field>
+
+          <Button 
+            icon 
+            labelPosition='right' 
+            primary 
+            floated='right'
+            onClick={() => history.push("/ReminderDetails")}
+          >
+            Next
+            <Icon name='arrow right' />
+          </Button>
         </Form>
 
       </Container>
