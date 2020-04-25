@@ -1,10 +1,12 @@
 import React, { Fragment, useState } from 'react';
-import { CategoryGroup } from '../../redux/api';
+import { CategoryGroup, Category } from '../../redux/api';
 import { Form, Accordion, Card, Icon, AccordionTitleProps } from 'semantic-ui-react';
 import CreateCategories from './CreateCategories';
 
 interface Props {
     categoriesGrouped: CategoryGroup[];
+    setCategory: Function;
+    selected?: Category;
 }
 
 interface State {
@@ -12,7 +14,7 @@ interface State {
     showCategories: boolean;
 }
 
-const CategorySelection: React.FC<Props> = ({ categoriesGrouped }) => {
+const CategorySelection: React.FC<Props> = ({ categoriesGrouped, setCategory, selected }) => {
     const [ state, setState ] = useState<State>({ activeIndex: -1, showCategories: false });
     const { activeIndex } = state;
 
@@ -33,6 +35,11 @@ const CategorySelection: React.FC<Props> = ({ categoriesGrouped }) => {
                 showCategories: !prevState.showCategories
             }
         });
+    }
+
+    const selectCategory = (category: Category) => {
+        setCategory(category);
+        toggleCategorySelection();
     }
 
     const createGroups = () => {
@@ -56,7 +63,12 @@ const CategorySelection: React.FC<Props> = ({ categoriesGrouped }) => {
                             active={activeIndex === index}
                         >
                             <Card.Group doubling itemsPerRow={4}>
-                                <CreateCategories groupID={categoryGroup.group.id} categories={categories} />
+                                <CreateCategories 
+                                    groupID={categoryGroup.group.id} 
+                                    categories={categories}
+                                    selectCategory={selectCategory}
+                                    selected={selected}
+                                />
                             </Card.Group>
                         </Accordion.Content>
                     </Fragment>
@@ -79,6 +91,7 @@ const CategorySelection: React.FC<Props> = ({ categoriesGrouped }) => {
                         toggleCategorySelection()
                     }}
                     readOnly={true}
+                    value={selected ? selected.categoryName : undefined}
                 />
             </Form.Field>
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { Container, Header, Icon, Form } from 'semantic-ui-react';
@@ -8,6 +8,7 @@ import { getCategoriesGrouped } from '../../redux/modules/category';
 import { getProviders } from '../../redux/modules/provider';
 
 import CategorySelection from '../../components/CategorySelection/CategorySelection';
+import { Category } from '../../redux/api';
 
 const mapStateToProps = (state: RootState) => ({
   categoriesGrouped: state.category.grouped,
@@ -24,10 +25,25 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   );
 };
 
+interface ReminderForm {
+  title: string;
+  category?: Category;
+}
+
+interface State {
+  form: ReminderForm;
+}
+
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;
 
 const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, getProviders, categoriesGrouped, providers }) => {
+  const [state, setState] = useState<State>({
+    form: {
+      title: '',
+      category: undefined
+    }
+  });
 
   useEffect(() => {
     if (categoriesGrouped.length === 0) {
@@ -37,6 +53,30 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
       getProviders('016f388e-bcf7-410b-9ebd-08ff91484ec6');
     }
   }, [getCategoriesGrouped, getProviders, categoriesGrouped, providers]);
+
+  const setCategory = (category: Category) => {
+    setState({
+      ...state,
+      form: {
+        ...state.form,
+        category
+      }
+    });
+  }
+
+  const handleTextInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const {name, value} = event.target;
+
+    setState({
+        ...state,
+        form: {
+          ...form,
+          [name]: value
+        }
+    });
+  }
+
+  const {form} = state;
 
   return (
     <div className='pageWrapper'>
@@ -51,12 +91,18 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
           <Form.Field>
             <input 
                 type='text' 
-                name='title' 
+                name='title'
+                value={form.title}
                 placeholder='Title...' 
+                onChange={handleTextInputChange}
             />
           </Form.Field>
           
-          <CategorySelection categoriesGrouped={categoriesGrouped} />
+          <CategorySelection 
+            categoriesGrouped={categoriesGrouped} 
+            setCategory={setCategory}
+            selected={form.category}
+          />
         </Form>
 
       </Container>
