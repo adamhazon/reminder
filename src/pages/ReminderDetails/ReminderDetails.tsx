@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Header, Icon, Form, Label, Button } from 'semantic-ui-react';
+import { Container, Header, Icon, Button } from 'semantic-ui-react';
 import { useHistory } from 'react-router-dom';
 
 export const ReminderDetails = () => {
@@ -10,7 +10,7 @@ export const ReminderDetails = () => {
             <Container text>
 
                 <Header className='uppercase' icon textAlign='center'>
-                <Icon name='bell outline' />
+                <Icon name='bell' />
                 Reminder details
                 </Header>
 

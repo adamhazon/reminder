@@ -36,6 +36,19 @@
     color: #555555;
 }
 
+.ui.horizontal.segments.endDateWrapper {
+    margin: 0 0 1em;
+}
+
+.ui.horizontal.segments>.segment.endDateSegment {
+    flex: 1;
+    padding: 0;
+}
+
+.ui.fluid.dropdown.endDateField {
+    border: 0;
+}
+
 /* remindme-categories Icons */
 .category-icon--anti-virus-software:before { content: '\e800'; }
 .category-icon--auslandsversicherung:before { content: '\e801'; }
