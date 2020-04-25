@@ -6,8 +6,8 @@ import {
 
 import './App.css';
 
-import { ReminderCreation } from './pages/ReminderCreation/ReminderCreation';
-import { ReminderDetails } from './pages/ReminderDetails/ReminderDetails';
+import { ReminderCreation } from './pages/ReminderCreation';
+import { ReminderDetails } from './pages/ReminderDetails';
 
 const App = () => {
 

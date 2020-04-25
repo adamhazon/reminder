@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Category } from '../../redux/api';
+import { Category } from '../redux/api';
 import { Card } from 'semantic-ui-react';
 
 interface Props {

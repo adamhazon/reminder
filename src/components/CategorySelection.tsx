@@ -1,12 +1,13 @@
 import React, { Fragment, useState } from 'react';
-import { CategoryGroup, Category } from '../../redux/api';
-import { Form, Input, Accordion, Card, Icon, AccordionTitleProps, Label } from 'semantic-ui-react';
+import { CategoryGroup, Category } from '../redux/api';
+import { Form, Accordion, Card, Icon, AccordionTitleProps, Label } from 'semantic-ui-react';
 import CreateCategories from './CreateCategories';
 
 interface Props {
     categoriesGrouped: CategoryGroup[];
     setCategory: Function;
     selected?: Category;
+    error?: boolean;
 }
 
 interface State {
@@ -14,7 +15,7 @@ interface State {
     showCategories: boolean;
 }
 
-const CategorySelection: React.FC<Props> = ({ categoriesGrouped, setCategory, selected }) => {
+const CategorySelection: React.FC<Props> = ({ categoriesGrouped, setCategory, selected, error }) => {
     const [ state, setState ] = useState<State>({ activeIndex: -1, showCategories: false });
     const { activeIndex } = state;
 
@@ -83,7 +84,8 @@ const CategorySelection: React.FC<Props> = ({ categoriesGrouped, setCategory, se
         <Fragment>
             <Form.Field>
                 <Label ribbon color='olive' className='ribbonLabel'>Category</Label>
-                <Input 
+                <Form.Input 
+                    error={error}
                     type='text' 
                     name='category' 
                     placeholder='Select a category...'

@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
-import { connect } from 'react-redux';
-import { Container, Header, Icon, Form, Label, Button, 
-  Segment, Dropdown, DropdownProps, DropdownItemProps 
+import { connect, useDispatch } from 'react-redux';
+import { Container, Header, Icon, Form, Label, Button,
+  Segment, Dropdown, DropdownProps, DropdownItemProps
 } from 'semantic-ui-react';
 import { useHistory } from 'react-router-dom';
 
-import { RootState } from '../../redux';
-import { getCategoriesGrouped } from '../../redux/modules/category';
-import { getProviders } from '../../redux/modules/provider';
+import { RootState } from '../redux';
+import { getCategoriesGrouped } from '../redux/modules/category';
+import { getProviders } from '../redux/modules/provider';
 
-import CategorySelection from '../../components/CategorySelection/CategorySelection';
-import { Category } from '../../redux/api';
+import CategorySelection from '../components/CategorySelection';
+import { Category } from '../redux/api';
+import { createReminder, ReminderState } from '../redux/modules/reminder';
 
 import moment from 'moment';
 
 const mapStateToProps = (state: RootState) => ({
   categoriesGrouped: state.category.grouped,
   providers: state.provider.providers,
+  providerIsLoading: state.provider.loading,
+  reminder: state.reminder
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
@@ -30,25 +33,26 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   );
 };
 
-interface ReminderForm {
-  title: string;
-  category?: Category;
-  provider: string;
-  endDate: string;
-  notice?: number;
-}
-
 interface State {
-  form: ReminderForm;
+  form: ReminderState;
   days: DropdownItemProps[];
   months: DropdownItemProps[];
   years: DropdownItemProps[];
+  validate: boolean;
 }
 
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;
 
-const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, getProviders, categoriesGrouped, providers }) => {
+const UnconnectedReminderCreation: React.FC<Props> = ({
+  getCategoriesGrouped,
+  getProviders,
+  categoriesGrouped,
+  providers,
+  providerIsLoading,
+  reminder
+}) => {
+  const dispatch = useDispatch();
   const history = useHistory();
   const today = moment();
 
@@ -67,7 +71,7 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
 
   const createMonths = () => {
     const items: DropdownItemProps[] = [];
-    
+
     for (let i = 0; i < 12; i++) {
       items.push({ text: moment().month(i).format('MMMM'), value: i });
     }
@@ -77,7 +81,7 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
 
   const createYears = () => {
     const items: DropdownItemProps[] = [];
-    
+
     for (let i = today.year(); i < today.year()+11; i++) {
       items.push({ text: i, value: i });
     }
@@ -86,23 +90,18 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
   }
 
   const [state, setState] = useState<State>({
-    form: {
-      title: '',
-      category: undefined,
-      provider: '',
-      endDate: today.format(),
-      notice: undefined
-    },
+    form: reminder,
     days: createDays(today.format()),
     months: createMonths(),
-    years: createYears()
+    years: createYears(),
+    validate: false
   });
 
   const noticeOptions = [
-    { value: 0, text: 'No notice' },
-    { value: 1, text: '1 month notice' },
-    { value: 2, text: '2 months notice' },
-    { value: 3, text: '3 months notice' },
+    { value: 'No notice', text: 'No notice' },
+    { value: '1 month notice', text: '1 month notice' },
+    { value: '2 months notice', text: '2 months notice' },
+    { value: '3 months notice', text: '3 months notice' },
   ];
 
   const {form} = state;
@@ -120,8 +119,8 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
         form: {
           ...state.form,
           category,
-          provider: prevState.form.category 
-                    && prevState.form.category.id === category.id 
+          provider: prevState.form.category
+                    && prevState.form.category.id === category.id
                     ? prevState.form.provider : ''
         }
       }
@@ -166,6 +165,25 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
     });
   }
 
+  const reminderValidation = (): boolean => {
+    setState({
+      ...state,
+      validate: true
+    });
+    return form.title !== '' &&
+           form.category !== undefined &&
+           form.provider !== '' &&
+           form.endDate !== '';
+  } 
+                                      
+
+  const createReminderHandler = () => {
+    if (reminderValidation()) {
+      dispatch(createReminder(form));
+      history.push("/ReminderDetails")
+    }
+  }
+
   return (
     <div className='pageWrapper'>
       <Container text>
@@ -179,26 +197,30 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
           <Form.Field>
             <Label ribbon color='purple' className='ribbonLabel'>Title</Label>
             <Form.Input
-              type='text' 
+              error={state.validate && !form.title}
+              type='text'
               name='title'
               value={form.title}
-              placeholder='Describe your reminder...' 
+              placeholder='Describe your reminder...'
               onChange={handleTextInputChange}
             />
           </Form.Field>
-          
-          <CategorySelection 
-            categoriesGrouped={categoriesGrouped} 
+
+          <CategorySelection
+            categoriesGrouped={categoriesGrouped}
             setCategory={setCategory}
             selected={form.category}
+            error={state.validate && !form.category}
           />
 
           <Form.Field>
             <Label ribbon color='orange' className='ribbonLabel'>Provider</Label>
             <Form.Dropdown
+              error={state.validate && !form.provider}
               fluid
               search
               selection
+              loading={providerIsLoading}
               placeholder='Choose a provider...'
               noResultsMessage='Please select a category first'
               options={providers.map((provider) => {
@@ -220,7 +242,7 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
 
           <Label ribbon color='teal' className='ribbonLabel'>Contract end date</Label>
           <Segment.Group horizontal className='endDateWrapper'>
-            
+
             <Segment className='endDateSegment'>
               <Dropdown
                 id='day'
@@ -273,19 +295,19 @@ const UnconnectedReminderCreation: React.FC<Props> = ({ getCategoriesGrouped, ge
                 ...state,
                 form: {
                   ...form,
-                  notice: Number(data.value)
+                  notice: String(data.value)
                 }
               })}
               value={form.notice}
             />
           </Form.Field>
 
-          <Button 
-            icon 
-            labelPosition='right' 
-            primary 
+          <Button
+            icon
+            labelPosition='right'
+            secondary
             floated='right'
-            onClick={() => history.push("/ReminderDetails")}
+            onClick={createReminderHandler}
           >
             Next
             <Icon name='arrow right' />
