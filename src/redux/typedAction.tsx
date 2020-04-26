@@ -1,3 +1,5 @@
+// Flexible action helper that allows you to pass types
+
 export function typedAction<T extends string>(type: T): { type: T };
 export function typedAction<T extends string, P extends any>(
   type: T,

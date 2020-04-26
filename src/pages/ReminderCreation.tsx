@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect, useDispatch } from 'react-redux';
-import { Container, Header, Icon, Form, Label, Button,
-  Segment, Dropdown, DropdownProps, DropdownItemProps
+import { Container, Header, Icon, Form, Label, Button
 } from 'semantic-ui-react';
 import { useHistory } from 'react-router-dom';
 
@@ -11,10 +10,10 @@ import { getCategoriesGrouped } from '../redux/modules/category';
 import { getProviders } from '../redux/modules/provider';
 
 import CategorySelection from '../components/CategorySelection';
+import DateSelector from '../components/DateSelector';
+
 import { Category } from '../redux/api';
 import { createReminder, ReminderState } from '../redux/modules/reminder';
-
-import moment from 'moment';
 
 const mapStateToProps = (state: RootState) => ({
   categoriesGrouped: state.category.grouped,
@@ -35,9 +34,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 
 interface State {
   form: ReminderState;
-  days: DropdownItemProps[];
-  months: DropdownItemProps[];
-  years: DropdownItemProps[];
   validate: boolean;
 }
 
@@ -54,49 +50,14 @@ const UnconnectedReminderCreation: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const today = moment();
-
-  const createDays = (dateString: string) => {
-    const items: DropdownItemProps[] = [];
-    const date = moment(dateString).date(1);
-    const month = date.month();
-
-    while (month === date.month()) {
-      items.push({ text: date.date(), value: date.date() });
-      date.add(1, 'days');
-    }
-
-    return items;
-  }
-
-  const createMonths = () => {
-    const items: DropdownItemProps[] = [];
-
-    for (let i = 0; i < 12; i++) {
-      items.push({ text: moment().month(i).format('MMMM'), value: i });
-    }
-
-    return items;
-  }
-
-  const createYears = () => {
-    const items: DropdownItemProps[] = [];
-
-    for (let i = today.year(); i < today.year()+11; i++) {
-      items.push({ text: i, value: i });
-    }
-
-    return items;
-  }
-
+  
+  // Initial local state
   const [state, setState] = useState<State>({
     form: reminder,
-    days: createDays(today.format()),
-    months: createMonths(),
-    years: createYears(),
     validate: false
   });
 
+  // List of notice options
   const noticeOptions = [
     { value: 'No notice', text: 'No notice' },
     { value: '1 month notice', text: '1 month notice' },
@@ -112,6 +73,7 @@ const UnconnectedReminderCreation: React.FC<Props> = ({
     }
   }, [getCategoriesGrouped, getProviders, categoriesGrouped, providers]);
 
+  // Set the selected category in the state & load list of providers
   const setCategory = (category: Category) => {
     setState(prevState => {
       return {
@@ -128,6 +90,7 @@ const UnconnectedReminderCreation: React.FC<Props> = ({
     getProviders(category.id);
   }
 
+  // Update text inputs in state
   const handleTextInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target;
 
@@ -140,31 +103,18 @@ const UnconnectedReminderCreation: React.FC<Props> = ({
     });
   }
 
-  const handleDateChange = (event: React.SyntheticEvent<HTMLElement, Event>, data: DropdownProps) => {
-    const date = moment(form.endDate);
-
-    switch (data.id) {
-      case 'day':
-        date.date(Number(data.value));
-        break;
-      case 'month':
-        date.month(Number(data.value));
-        break;
-      case 'year':
-        date.year(Number(data.value));
-        break;
-    }
-
+  // update endDate in state
+  const setEndDate = (date: string) => {
     setState({
-        ...state,
-        form: {
-          ...form,
-          endDate: date.format()
-        },
-        days: createDays(date.format())
+      ...state,
+      form: {
+        ...form,
+        endDate: date
+      }
     });
   }
 
+  // Validate reminder inputs
   const reminderValidation = (): boolean => {
     setState({
       ...state,
@@ -176,7 +126,7 @@ const UnconnectedReminderCreation: React.FC<Props> = ({
            form.endDate !== '';
   } 
                                       
-
+  // Handle the click of the next button
   const createReminderHandler = () => {
     if (reminderValidation()) {
       dispatch(createReminder(form));
@@ -240,49 +190,7 @@ const UnconnectedReminderCreation: React.FC<Props> = ({
             />
           </Form.Field>
 
-          <Label ribbon color='teal' className='ribbonLabel'>Contract end date</Label>
-          <Segment.Group horizontal className='endDateWrapper'>
-
-            <Segment className='endDateSegment'>
-              <Dropdown
-                id='day'
-                className='endDateField'
-                fluid
-                floating
-                selection
-                placeholder='Day...'
-                options={state.days}
-                onChange={handleDateChange}
-                value={moment(form.endDate).date()}
-              />
-            </Segment>
-            <Segment className='endDateSegment'>
-              <Dropdown
-                id='month'
-                className='endDateField'
-                fluid
-                floating
-                selection
-                placeholder='Month...'
-                options={state.months}
-                onChange={handleDateChange}
-                value={moment(form.endDate).month()}
-              />
-            </Segment>
-            <Segment className='endDateSegment'>
-              <Dropdown
-                id='year'
-                className='endDateField'
-                fluid
-                floating
-                selection
-                placeholder='Year...'
-                options={state.years}
-                onChange={handleDateChange}
-                value={moment(form.endDate).year()}
-              />
-            </Segment>
-          </Segment.Group>
+          <DateSelector date={form.endDate} updateDate={setEndDate} />
 
           <Form.Field>
             <Label ribbon color='yellow' className='ribbonLabel'>Notice period (optional)</Label>

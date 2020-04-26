@@ -27,14 +27,15 @@ const fetchProvidersError = (error: Error) => (
     typedAction('provider/FETCH_ERROR', {error})
 );
 
-export const getProviders = (id: string) => {
+// Return array of providers for a specific category
+export const getProviders = (categoryID: string) => {
     return async (dispatch: Dispatch<AnyAction>) => {
         dispatch(fetchProviders());
 
         let response: HttpResponse<Provider[]>;
 
         try {
-            response = await http<Provider[]>(API.Provider.replace(':id', id));
+            response = await http<Provider[]>(API.Provider.replace(':id', categoryID));
             if (response.parsedBody)
                 dispatch(fetchProvidersSuccess(response.parsedBody));
         }
@@ -46,6 +47,7 @@ export const getProviders = (id: string) => {
 
 type ProviderAction = ReturnType<typeof fetchProviders | typeof fetchProvidersSuccess | typeof fetchProvidersError>;
 
+// Provider reducer
 export const providerReducer = (
     state = initialState,
     action: ProviderAction

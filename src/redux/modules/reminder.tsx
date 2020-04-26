@@ -23,6 +23,7 @@ const createReminderSuccess = (payload: ReminderState) => (
     typedAction('reminder/CREATE', payload)
 );
 
+// Store the reminder in reminder state
 export const createReminder = (reminder: ReminderState) => {
     return (dispatch: Dispatch<AnyAction>) => {
         dispatch(createReminderSuccess(reminder));
@@ -31,6 +32,7 @@ export const createReminder = (reminder: ReminderState) => {
 
 type ReminderAction = ReturnType<typeof createReminderSuccess>;
 
+// Reminder reducer
 export const reminderReducer = (
     state = initialState,
     action: ReminderAction

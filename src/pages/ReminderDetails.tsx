@@ -26,8 +26,6 @@ const UnconnectedReminderDetails: React.FC<Props> = ({ reminder }) => {
 
                 <Divider />
 
-
-
                 <Item.Group>
                     <Item>
                         <Item.Content>

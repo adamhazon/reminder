@@ -33,6 +33,7 @@ const fetchCategoriesError = (error: Error) => (
     typedAction('category/FETCH_ERROR', {error})
 );
 
+// Return an array of all categories
 export const getCategories = () => {
     return async (dispatch: Dispatch<AnyAction>) => {
         dispatch(fetchCategories());
@@ -50,6 +51,7 @@ export const getCategories = () => {
     };
 };
 
+// Return categories divided by groups
 export const getCategoriesGrouped = () => {
     return async (dispatch: Dispatch<AnyAction>) => {
         dispatch(fetchCategories());
@@ -69,6 +71,7 @@ export const getCategoriesGrouped = () => {
 
 type CategoryAction = ReturnType<typeof fetchCategories | typeof fetchCategoriesSuccess | typeof fetchCategoriesGroupedSuccess | typeof fetchCategoriesError>;
 
+// Category reducer
 export const categoryReducer = (
     state = initialState,
     action: CategoryAction

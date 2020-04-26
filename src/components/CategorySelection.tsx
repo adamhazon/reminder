@@ -19,6 +19,7 @@ const CategorySelection: React.FC<Props> = ({ categoriesGrouped, setCategory, se
     const [ state, setState ] = useState<State>({ activeIndex: -1, showCategories: false });
     const { activeIndex } = state;
 
+    // Expend / Collapse a group
     const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, titleProps: AccordionTitleProps) => {
         const { index } = titleProps;
         const newIndex = state.activeIndex === index ? -1 : index;
@@ -28,6 +29,7 @@ const CategorySelection: React.FC<Props> = ({ categoriesGrouped, setCategory, se
         });
     }
 
+    // Show / Hide the categories for the selected group
     const toggleCategorySelection = () => {
         setState(prevState => {
             return {
@@ -37,6 +39,7 @@ const CategorySelection: React.FC<Props> = ({ categoriesGrouped, setCategory, se
         });
     }
 
+    // Pass the selected category to parent & hide the category selection
     const selectCategory = (category: Category) => {
         setCategory(category);
         toggleCategorySelection();
@@ -47,8 +50,10 @@ const CategorySelection: React.FC<Props> = ({ categoriesGrouped, setCategory, se
         
         if (categoriesGrouped && categoriesGrouped.length) {
             categoriesGrouped.map((categoryGroup, index) => {
+                
                 // Remove duplications
                 const categories = categoryGroup.categories.filter((v,i,a) => a.findIndex(t => (t.id === v.id)) === i);
+
                 render.push(
                     <Fragment key={`group_${categoryGroup.group.id}`}>
                         <Accordion.Title
