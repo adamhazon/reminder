@@ -12,7 +12,7 @@ const mapStateToProps = (state: RootState) => ({
 
 type Props = ReturnType<typeof mapStateToProps>;
 
-const UnconnectedReminderDetails: React.FC<Props> = ({ reminder }) => {
+export const UnconnectedReminderDetails: React.FC<Props> = ({ reminder }) => {
     const history = useHistory();
 
     return (

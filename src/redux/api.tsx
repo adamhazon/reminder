@@ -2,13 +2,11 @@ export type Category = {
     id: string;
     icon: string;
     categoryName: string;
-    sortPriority: number;
 }
 
 export type Group = {
     id: string;
     name: string;
-    sortPriority: number;
 }
 
 export type CategoryGroup = {
@@ -20,14 +18,12 @@ export type Company = {
     id: string;
     companyName: string;
     externalLogoUrl: string;
-    sortPriority: number;
 }
 
 export type Provider = {
     id: string;
     category: Category;
     company: Company;
-    sortPriority: number;
 }
 
 export enum API {
